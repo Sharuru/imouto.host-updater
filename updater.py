@@ -56,8 +56,7 @@ content = linker(urls).decode('utf-8')
 source_id = 9       # imouto.hosts' id is 9
 print 'Finding imouto.hosts...'
 
-local_hosts = open('localhosts', 'r')
-local_hosts_data = local_hosts.read()
+local_hosts_data = open('localhosts', 'r').read()
 remote_update_date = check_remote_version(9)
 local_update_date = check_hosts_version(local_hosts_data)
 
@@ -65,7 +64,7 @@ print 'Latest update time is: ' + remote_update_date
 
 print 'Local hosts file update time is: ' + local_update_date
 if local_update_date == 'Not Found.':
-    print 'May this is your first time using imouto.hosts'
+    print 'Maybe this is your first time using imouto.hosts'
 
 if cmp(local_update_date, remote_update_date) == 0:
     print 'Hosts is already updated.'
@@ -75,10 +74,42 @@ else:
     download_url = urls + str(source_id) + '/' + get_hosts(source_id) + '/hosts'
     print 'Downloading latest imouto.hosts from ' + download_url,
 
-    remote_hosts = urllib2.urlopen(download_url)
-    remote_hosts_data = remote_hosts.read()
-    
+    remote_hosts_data = urllib2.urlopen(download_url).read()
+    open('remote', 'wb').write(remote_hosts_data)
+    remote_hosts_data = open('remote', 'r').readlines()
+
     print 'Success.'
+
+    print 'Ready to modify local hosts...'
+    # Locate Local Hosts
+    local_hosts_data = open('localhosts', 'r').readlines()
+    total_lines = 0
+    update_hosts_lines = 0
+    count_hosts = True
+    for lines in local_hosts_data:
+        total_lines += 1
+        if count_hosts is True:
+            update_hosts_lines += 1
+        if lines == '#+END\n':
+            print 'Locate mark found.'
+            count_hosts = False
+    # Save Custom Hosts Record
+    print 'Backing-up local custom hosts record...',
+    custom_hosts = []
+    for lines in range(update_hosts_lines, total_lines):
+        custom_hosts.append(local_hosts_data[lines])
+    print 'Success.'
+
+    # Update Hosts
+    print 'Writing remote hosts record...',
+    open('localhosts', 'wb').writelines(remote_hosts_data)
+    open('localhosts', 'wb+').writelines(custom_hosts)
+    open('localhosts', 'wb+').write('I am good. maybe')
+    open('localhosts').close()
+    print 'Success.'
+
+    print remote_hosts_data
+
 
 
 
