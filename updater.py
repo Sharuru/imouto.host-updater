@@ -103,12 +103,13 @@ else:
     # Update Hosts
     print 'Writing remote hosts record...',
     open('localhosts', 'wb').writelines(remote_hosts_data)
-    open('localhosts', 'wb+').writelines(custom_hosts)
-    open('localhosts', 'wb+').write('I am good. maybe')
+    open('localhosts', 'a').write('\n')
+    open('localhosts', 'a').writelines(custom_hosts)
     open('localhosts').close()
     print 'Success.'
 
-    print remote_hosts_data
+    print 'Decteing '
+    print 'All operation finished.'
 
 
 
