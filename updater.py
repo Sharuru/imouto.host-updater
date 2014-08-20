@@ -55,7 +55,7 @@ content = linker(urls).decode('utf-8')
 source_id = 9       # imouto.hosts' id is 9
 print 'Finding imouto.hosts...'
 
-local_hosts_data = open('localhosts', 'r').read()
+local_hosts_data = open('hosts', 'r').read()
 remote_update_date = check_remote_version(9)
 local_update_date = check_hosts_version(local_hosts_data)
 
