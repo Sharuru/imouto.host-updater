@@ -23,9 +23,9 @@ Though this updater is simple and almost write for **me** :), you can still choo
 For Windows users, updater will flush dns record automatically. And recommend you write a booter such as:
 ```@echo off```+```python updater.py```saved as .bat and run it at system starts.
 
-For other platform, I will add auto-flush function later.
+For other platforms, I will add auto-flush function later.
 
-For more function, please check it out in [Issue.](https://github.com/Sharuru/imouto.hosts-updater/issuesIssue)
+For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.hosts-updater/issuesIssue)
 
 ##Latest Version
 v0.1.1 windows version finished
