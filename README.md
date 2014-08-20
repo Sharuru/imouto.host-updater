@@ -7,7 +7,7 @@ imouto.hosts updater is an easy hosts updater for imouto.hosts published on [pro
 ##Advantage
 Easy to use and easy to customize.
 
-##Useage
+##Usage
 + Clone this repositority to everywhere you like. (for example: under 'etc' folder.)
 + Modify your own hosts record if needed.
 + Run ```python updater.py```
