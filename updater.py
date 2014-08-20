@@ -101,7 +101,7 @@ else:
 
     # Update Hosts
     print 'Writing remote hosts record...',
-    open('hosts', 'wb').writelines(remote_hosts_data)
+    open('hosts', 'w').writelines(remote_hosts_data)
     open('hosts', 'a').write('\n')
     open('hosts', 'a').writelines(custom_hosts)
     open('hosts').close()
