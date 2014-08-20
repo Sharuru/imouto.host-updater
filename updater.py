@@ -4,10 +4,9 @@ __author__ = 'Mave'
 import re
 import urllib2
 import platform
+import os
 
 reload(__import__('sys')).setdefaultencoding('utf-8')
-
-system_type = platform.system()
 
 
 def linker(url):
@@ -82,7 +81,7 @@ else:
 
     print 'Ready to modify local hosts...'
     # Locate Local Hosts
-    local_hosts_data = open('localhosts', 'r').readlines()
+    local_hosts_data = open('hosts', 'r').readlines()
     total_lines = 0
     update_hosts_lines = 0
     count_hosts = True
@@ -102,13 +101,23 @@ else:
 
     # Update Hosts
     print 'Writing remote hosts record...',
-    open('localhosts', 'wb').writelines(remote_hosts_data)
-    open('localhosts', 'a').write('\n')
-    open('localhosts', 'a').writelines(custom_hosts)
-    open('localhosts').close()
+    open('hosts', 'wb').writelines(remote_hosts_data)
+    open('hosts', 'a').write('\n')
+    open('hosts', 'a').writelines(custom_hosts)
+    open('hosts').close()
     print 'Success.'
 
-    print 'Decteing '
+    print 'Removing temporary file...',
+    os.remove('remote')
+    print 'Success.'
+
+    print 'Detecting OS type...'
+    system_type = platform.system()
+    if system_type == 'Windows':
+        print 'For Windows, flushing dns record...'
+        os.system('ipconfig /flushdns')
+
+    #print '\n'
     print 'All operation finished.'
 
 
