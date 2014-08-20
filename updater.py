@@ -37,7 +37,10 @@ def get_hosts(source):
 
 def check_hosts_version(hosts_data):
     version = re.compile('UPDATE_TIME (.*)')
-    return version.findall(hosts_data)[0]
+    try:
+        return str(version.findall(hosts_data)[0])
+    except IndexError:
+        return 'Not Found.'
 
 
 def check_remote_version(source):
@@ -53,15 +56,30 @@ content = linker(urls).decode('utf-8')
 source_id = 9       # imouto.hosts' id is 9
 print 'Finding imouto.hosts...'
 
-print 'Latest update time is: ' + check_remote_version(9)
+local_hosts = open('localhosts', 'r')
+local_hosts_data = local_hosts.read()
+remote_update_date = check_remote_version(9)
+local_update_date = check_hosts_version(local_hosts_data)
 
+print 'Latest update time is: ' + remote_update_date
 
-#download_url = urls + str(source_id) + '/' + get_hosts(source_id) + '/hosts'
-#print 'Downloading latest imouto.hosts from ' + download_url,
+print 'Local hosts file update time is: ' + local_update_date
+if local_update_date == 'Not Found.':
+    print 'May this is your first time using imouto.hosts'
 
-#remote_hosts = urllib2.urlopen(download_url)
-#remote_hosts_data = remote_hosts.read()
-#print 'Success.'
+if cmp(local_update_date, remote_update_date) == 0:
+    print 'Hosts is already updated.'
+else:
+    print 'Hosts needs update.'
+
+    download_url = urls + str(source_id) + '/' + get_hosts(source_id) + '/hosts'
+    print 'Downloading latest imouto.hosts from ' + download_url,
+
+    remote_hosts = urllib2.urlopen(download_url)
+    remote_hosts_data = remote_hosts.read()
+    
+    print 'Success.'
+
 
 
 
