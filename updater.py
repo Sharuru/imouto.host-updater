@@ -28,13 +28,13 @@ def linker(url):
             exit()
 
 
-def get_hosts(source):
+def get_hosts_dl_link(source):
     if source == 9:      # imouto.hosts' id is 9
         hosts = re.compile('<a href="/sources/9/(.*)/hosts.*</a>')
         return hosts.findall(content)[0]
 
 
-def check_hosts_version(hosts_data):
+def check_local_version(hosts_data):
     version = re.compile('UPDATE_TIME (.*)')
     try:
         return str(version.findall(hosts_data)[0])
@@ -55,9 +55,14 @@ content = linker(urls).decode('utf-8')
 source_id = 9       # imouto.hosts' id is 9
 print 'Finding imouto.hosts...'
 
-local_hosts_data = open('hosts', 'r').read()
-remote_update_date = check_remote_version(9)
-local_update_date = check_hosts_version(local_hosts_data)
+try:
+    local_hosts_data = open('hosts', 'r').read()
+except IOError:
+    print 'No local hosts found.'
+    local_hosts_data = open('hosts', 'w+').read()
+
+remote_update_date = check_remote_version(source_id)
+local_update_date = check_local_version(local_hosts_data)
 
 print 'Latest update time is: ' + remote_update_date
 
@@ -70,7 +75,7 @@ if cmp(local_update_date, remote_update_date) == 0:
 else:
     print 'Hosts needs update.'
 
-    download_url = urls + str(source_id) + '/' + get_hosts(source_id) + '/hosts'
+    download_url = urls + str(source_id) + '/' + get_hosts_dl_link(source_id) + '/hosts'
     print 'Downloading latest imouto.hosts from ' + download_url,
 
     remote_hosts_data = urllib2.urlopen(download_url).read()
