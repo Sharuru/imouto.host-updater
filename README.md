@@ -28,4 +28,4 @@ For other platforms, I will add auto-flush function later.
 For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.hosts-updater/issuesIssue)
 
 ##Latest Version
-v0.1.3 fix \n error
+v0.1.4 Delete hosts
