@@ -69,6 +69,12 @@ print 'Latest update time is: ' + remote_update_date
 print 'Local hosts file update time is: ' + local_update_date
 if local_update_date == 'Not Found.':
     print 'Maybe this is your first time using imouto.hosts'
+    access = raw_input('Have you backup your custom hosts? Y/N')
+    if cmp(access, 'Y') == 0 or cmp(access, 'y') == 0:
+        print 'Ok, going on...'
+    else:
+        print 'Please backup your local hosts record at first, and added it after #+END after updated.'
+        exit()
 
 if cmp(local_update_date, remote_update_date) == 0:
     print 'Hosts is already updated.'
@@ -97,6 +103,7 @@ else:
         if lines == '#+END\n':
             print 'Locate mark found.'
             count_hosts = False
+            
     # Save Custom Hosts Record
     print 'Backing-up local custom hosts record...',
     custom_hosts = []
@@ -107,10 +114,12 @@ else:
     # Update Hosts
     print 'Writing remote hosts record...',
     open('hosts', 'w').writelines(remote_hosts_data)
-    open('hosts', 'a').write('\n')
-    open('hosts', 'a').writelines(custom_hosts)
-    open('hosts').close()
     print 'Success.'
+    open('hosts', 'a').write('\n')
+    print 'Writing local custom hosts record...',
+    open('hosts', 'a').writelines(custom_hosts)
+    print 'Success.'
+    open('hosts').close()
 
     print 'Removing temporary file...',
     os.remove('remote')
@@ -119,8 +128,10 @@ else:
     print 'Detecting OS type...'
     system_type = platform.system()
     if system_type == 'Windows':
-        print 'For Windows, flushing dns record...'
+        print 'For Windows, running ipconfig/flushdns...'
         os.system('ipconfig /flushdns')
+    elif system_type == 'Linux':
+        print 'For Linux, '
 
     #print '\n'
     print 'All operation finished.'
