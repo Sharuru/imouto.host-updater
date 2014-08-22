@@ -69,10 +69,10 @@ print 'Latest update time is: ' + remote_update_date
 
 # Local Check
 print 'Checking local...'
-try:        # Is Local Hosts File Exist Or Not
-    local_hosts_data = open('hosts', 'r').read()        # Exist, transport data
+try:
+    local_hosts_data = open('hosts', 'r').read()
 except IOError:
-    print 'No local hosts found.'       # Not exist, create empty file and transport
+    print 'No local hosts found.'
     local_hosts_data = open('hosts', 'w+').read()
     hosts_created_by_updater = True
 
