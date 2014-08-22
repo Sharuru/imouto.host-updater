@@ -51,64 +51,90 @@ urls = 'https://www.projecth.us/sources/'
 
 content = linker(urls).decode('utf-8')
 
-source_id = 9       # imouto.hosts' id is 9
-print 'Finding imouto.hosts...'
+############### CONFIG HERE ###############
 
-try:
-    local_hosts_data = open('hosts', 'r').read()
-except IOError:
-    print 'No local hosts found.'
-    local_hosts_data = open('hosts', 'w+').read()
+source_id = 9       # imouto.hosts' id is 9
+
+############### GLOBAL FLAG ###############
+
+hosts_created_by_updater = False
+custom_hosts_backed_up = False
+
+###########################################
+
+print 'Checking remote...'
 
 remote_update_date = check_remote_version(source_id)
-local_update_date = check_local_version(local_hosts_data)
-
 print 'Latest update time is: ' + remote_update_date
 
-print 'Local hosts file update time is: ' + local_update_date
-if local_update_date == 'Not Found.':
-    print 'Maybe this is your first time using imouto.hosts'
-    access = raw_input('Have you backup your custom hosts? Y/N')
-    if cmp(access, 'Y') == 0 or cmp(access, 'y') == 0:
-        print 'Ok, going on...'
-    else:
-        print 'Please backup your local hosts record at first, and added it after #+END after updated.'
-        exit()
+# Local Check
+print 'Checking local...'
+try:        # Is Local Hosts File Exist Or Not
+    local_hosts_data = open('hosts', 'r').read()        # Exist, transport data
+except IOError:
+    print 'No local hosts found.'       # Not exist, create empty file and transport
+    local_hosts_data = open('hosts', 'w+').read()
+    hosts_created_by_updater = True
 
+local_update_date = check_local_version(local_hosts_data)
+
+print 'Local hosts file update time is: ' + local_update_date
+
+if local_update_date == 'Not Found.':
+    if hosts_created_by_updater is False:
+        print 'Maybe this is your first time using hosts on projecth.org/sources.'
+        print 'I will backup it :)'
+        # Backup Custom Hosts Record
+        print 'Backing-up local custom hosts record...',
+        custom_hosts = []
+        for lines in local_hosts_data:
+            custom_hosts.append(lines)
+        print 'Success.'
+        custom_hosts_backed_up = True
+    else:
+        print 'No custom hosts record needs backup.'
+
+# Is Hosts Need Update Or Not
 if cmp(local_update_date, remote_update_date) == 0:
     print 'Hosts is already updated.'
 else:
     print 'Hosts needs update.'
 
+    # Prepare To Download
     download_url = urls + str(source_id) + '/' + get_hosts_dl_link(source_id) + '/hosts'
     print 'Downloading latest imouto.hosts from ' + download_url,
 
+    # Get Remote Data
     remote_hosts_data = urllib2.urlopen(download_url).read()
     open('remote', 'wb').write(remote_hosts_data)
     remote_hosts_data = open('remote', 'r').readlines()
 
     print 'Success.'
 
-    print 'Ready to modify local hosts...'
-    # Locate Local Hosts
-    local_hosts_data = open('hosts', 'r').readlines()
-    total_lines = 0
-    update_hosts_lines = 0
-    count_hosts = True
-    for lines in local_hosts_data:
-        total_lines += 1
-        if count_hosts is True:
-            update_hosts_lines += 1
-        if lines == '#+END\n':
-            print 'Locate mark found.'
-            count_hosts = False
+    print 'Ready to modify local hosts...',
 
-    # Save Custom Hosts Record
-    print 'Backing-up local custom hosts record...',
-    custom_hosts = []
-    for lines in range(update_hosts_lines, total_lines):
-        custom_hosts.append(local_hosts_data[lines])
-    print 'Success.'
+    if custom_hosts_backed_up is False:
+        # Locate Local Hosts
+        local_hosts_data = open('hosts', 'r').readlines()
+        total_lines = 0
+        update_hosts_lines = 0
+        count_hosts = True
+        for lines in local_hosts_data:
+            total_lines += 1
+            if count_hosts is True:
+                update_hosts_lines += 1
+            if lines == '#+END\n':
+                print 'Locate mark found.'
+                count_hosts = False
+
+        # Backup Custom Hosts Record
+        print 'Backing-up local custom hosts record...',
+        custom_hosts = []
+        for lines in range(update_hosts_lines, total_lines):
+            custom_hosts.append(local_hosts_data[lines])
+        print 'Success.'
+    else:
+        print 'Skipped.'
 
     # Update Hosts
     print 'Writing remote hosts record...',
