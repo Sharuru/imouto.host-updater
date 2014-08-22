@@ -47,7 +47,6 @@ def check_remote_version(source):
         version = re.compile(rule, re.S)
         return version.findall(content)[0]
 
-
 urls = 'https://www.projecth.us/sources/'
 
 content = linker(urls).decode('utf-8')
@@ -103,7 +102,7 @@ else:
         if lines == '#+END\n':
             print 'Locate mark found.'
             count_hosts = False
-            
+
     # Save Custom Hosts Record
     print 'Backing-up local custom hosts record...',
     custom_hosts = []
@@ -130,10 +129,7 @@ else:
     if system_type == 'Windows':
         print 'For Windows, running ipconfig/flushdns...'
         os.system('ipconfig /flushdns')
-    elif system_type == 'Linux':
-        print 'For Linux, '
 
-    #print '\n'
     print 'All operation finished.'
 
 
