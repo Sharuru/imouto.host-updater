@@ -14,8 +14,9 @@ Easy to use and easy to customize.
 + Your hosts is **UP-TO-DATE**!
 
 ##Am I needed to backup my own hosts record?
-imouto.hosts updater will save all the custom hosts record after mark '#+END' before updating and will write it back after using 'a' method. So, if your own hosts record is before '#+END', you should modify it after that mark.
-**But if this is your first time using hosts published on projecth.org/sources, you should back it up in another place!**
+imouto.hosts updater will save all the custom hosts record after mark '#+END' before updating and will write it back after using 'a' method.
+
+**If you are first running this updater, I highly recommend you to backup your hosts at different places though the updater will auto backup and added it after the '#+END' mark.**
 
 ##I don't like imouto.hosts, I want to use other sources published on projecth.org/sources!
 Though this updater is simple and almost write for **me** :), you can still choose your own sources on projecth.org/sources. Just change source_id and make a little work in regexp, you can make your own updater!
@@ -29,4 +30,4 @@ For other platforms, I will add auto-flush function later.
 For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.hosts-updater/issuesIssue)
 
 ##Latest Version
-v0.1.5 Check local before updated
+v0.1.6 Backup hosts for first running
