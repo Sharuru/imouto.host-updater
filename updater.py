@@ -29,22 +29,22 @@ def linker(url):
 
 
 def get_hosts_dl_link(source):
-    if source == 9:      # imouto.hosts' id is 9
-        hosts = re.compile('<a href="/sources/9/(.*)/hosts.*</a>')
-        return hosts.findall(content)[0]
+    rule = '<a href="/sources/{id}/(.*)/hosts.*</a>'.format(id=source)
+    hosts = re.compile(rule)
+    return hosts.findall(content)[0]
 
 
 def check_local_version(hosts_data):
     version = re.compile('UPDATE_TIME (.*)')
     try:
-        return str(version.findall(hosts_data)[0])
+        return version.findall(hosts_data)[0]
     except IndexError:
         return 'Not Found.'
 
 
 def check_remote_version(source):
-    if source == 9:     # imouto.hosts' id is 9
-        version = re.compile('<img src="/sources/9/icon.jpg".*?>.*?</th>.*?<th>.*?</th>.*?<th>(.*?)</th>', re.S)
+        rule = '<img src="/sources/{id}/icon.jpg".*?>.*?</th>.*?<th>.*?</th>.*?<th>(.*?)</th>'.format(id=source)
+        version = re.compile(rule, re.S)
         return version.findall(content)[0]
 
 
