@@ -28,6 +28,17 @@ def linker(url):
             exit()
 
 
+def backup_local_hosts(data, backup_type, head=0, tail=0):
+    hosts_data = []
+    if backup_type == 'first_time':
+        for record in data:
+            hosts_data.append(record)
+    if backup_type == 'exist_file':
+        for record in range(head, tail):
+            hosts_data.append(data[record])
+    return hosts_data
+
+
 def get_hosts_dl_link(source):
     rule = '<a href="/sources/{id}/(.*)/hosts.*</a>'.format(id=source)
     hosts = re.compile(rule)
@@ -86,9 +97,7 @@ if local_update_date == 'Not Found.':
         print 'I will backup it :)'
         # Backup Custom Hosts Record
         print 'Backing-up local custom hosts record...',
-        custom_hosts = []
-        for lines in local_hosts_data:
-            custom_hosts.append(lines)
+        custom_hosts = backup_local_hosts(local_hosts_data, 'first_time')
         print 'Success.'
         custom_hosts_backed_up = True
     else:
@@ -129,9 +138,7 @@ else:
 
         # Backup Custom Hosts Record
         print 'Backing-up local custom hosts record...',
-        custom_hosts = []
-        for lines in range(update_hosts_lines, total_lines):
-            custom_hosts.append(local_hosts_data[lines])
+        custom_hosts = backup_local_hosts(local_hosts_data, 'exist_file', update_hosts_lines, total_lines)
         print 'Success.'
     else:
         print 'Skipped.'
