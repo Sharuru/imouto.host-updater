@@ -27,7 +27,7 @@ For Windows users, updater will flush dns record automatically. And recommend yo
 
 For other platforms, I will add auto-flush function later.
 
-For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.hosts-updater/issuesIssue)
+For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.hosts-updater/issues)
 
 ##Latest Version
 v0.1.6 Backup hosts for first running
