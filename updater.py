@@ -9,6 +9,13 @@ import os
 reload(__import__('sys')).setdefaultencoding('utf-8')
 
 
+############### CONFIG HERE ###############
+
+source_id = 9       # imouto.hosts' id is 9
+
+###########################################
+
+
 def linker(url):
     linker_try_times = 3
     request = urllib2.Request(url)
@@ -65,6 +72,16 @@ def get_hosts_dl_link(source):
     return hosts.findall(content)[0]
 
 
+def check_local_hosts():
+    print 'Checking local...'
+    try:
+        hosts_data = open('hosts', 'r').read()
+    except IOError:
+        print 'No local hosts found.'
+        hosts_data = open('hosts', 'w+').read()
+    return hosts_data
+
+
 def check_local_version(hosts_data):
     version = re.compile('UPDATE_TIME (.*)')
     try:
@@ -78,43 +95,18 @@ def check_remote_version(source):
         version = re.compile(rule, re.S)
         return version.findall(content)[0]
 
+
+# Main Start
 urls = 'https://www.projecth.us/sources/'
-
 content = linker(urls).decode('utf-8')
-
-############### CONFIG HERE ###############
-
-source_id = 9       # imouto.hosts' id is 9
-
-############### GLOBAL FLAG ###############
-
-hosts_created_by_updater = False
-
-###########################################
-
 print 'Checking remote...'
-
 remote_update_date = check_remote_version(source_id)
 print 'Latest update time is: ' + remote_update_date
 
 # Local Check
-print 'Checking local...'
-try:
-    local_hosts_data = open('hosts', 'r').read()
-except IOError:
-    print 'No local hosts found.'
-    local_hosts_data = open('hosts', 'w+').read()
-    hosts_created_by_updater = True
-
+local_hosts_data = check_local_hosts()
 local_update_date = check_local_version(local_hosts_data)
-
 print 'Local hosts file update time is: ' + local_update_date
-
-if local_update_date == 'Not Found.':
-    if hosts_created_by_updater is False:
-        print 'Maybe this is your first time using hosts on projecth.org/sources.'
-    else:
-        print 'No custom hosts record needs backup.'
 
 # Is Hosts Need Update Or Not
 if cmp(local_update_date, remote_update_date) == 0:
@@ -130,9 +122,7 @@ else:
     remote_hosts_data = urllib2.urlopen(download_url).read()
     open('remote', 'wb').write(remote_hosts_data)
     remote_hosts_data = open('remote', 'r').readlines()
-
     print 'Success.'
-
     print 'Ready to update local hosts...'
 
     # Backup Custom Hosts Record
@@ -148,17 +138,20 @@ else:
     print 'Success.'
     open('hosts').close()
 
+    # Remove Remote
     print 'Removing temporary file...',
     os.remove('remote')
     print 'Success.'
 
+    # Flush Dns
     print 'Detecting OS type...'
     system_type = platform.system()
     if system_type == 'Windows':
         print 'For Windows, running ipconfig/flushdns...'
         os.system('ipconfig /flushdns')
 
-    print 'All operation finished.'
+# All Finished
+print 'All operation finished.'
 
 
 
