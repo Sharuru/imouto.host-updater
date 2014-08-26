@@ -28,14 +28,34 @@ def linker(url):
             exit()
 
 
-def backup_local_hosts(data, backup_type, head=0, tail=0):
+def backup_local_hosts(data):
     hosts_data = []
-    if backup_type == 'first_time':
-        for record in data:
-            hosts_data.append(record)
-    if backup_type == 'exist_file':
-        for record in range(head, tail):
-            hosts_data.append(data[record])
+    print 'Detecting local hosts type...',
+    for check_line in data:
+        if check_line == '#+END\n':
+            print 'Formatted.'
+            # Locate Local Hosts
+            total_lines = 0
+            update_hosts_lines = 0
+            count_hosts = True
+            for lines in data:
+                total_lines += 1
+                if count_hosts is True:
+                    update_hosts_lines += 1
+                if lines == '#+END\n':
+                    print 'Locate mark found.'
+                    count_hosts = False
+            # Backup Process
+            print 'Backing-up local custom hosts record...',
+            for record in range(update_hosts_lines, total_lines):
+                hosts_data.append(data[record])
+            print 'Success.'
+            return hosts_data
+    print 'Not formatted.'
+    print 'Backing-up local custom hosts record...',
+    for record in data:
+        hosts_data.append(record)
+    print 'Success.'
     return hosts_data
 
 
@@ -69,7 +89,6 @@ source_id = 9       # imouto.hosts' id is 9
 ############### GLOBAL FLAG ###############
 
 hosts_created_by_updater = False
-custom_hosts_backed_up = False
 
 ###########################################
 
@@ -94,12 +113,6 @@ print 'Local hosts file update time is: ' + local_update_date
 if local_update_date == 'Not Found.':
     if hosts_created_by_updater is False:
         print 'Maybe this is your first time using hosts on projecth.org/sources.'
-        print 'I will backup it :)'
-        # Backup Custom Hosts Record
-        print 'Backing-up local custom hosts record...',
-        custom_hosts = backup_local_hosts(local_hosts_data, 'first_time')
-        print 'Success.'
-        custom_hosts_backed_up = True
     else:
         print 'No custom hosts record needs backup.'
 
@@ -120,28 +133,10 @@ else:
 
     print 'Success.'
 
-    print 'Ready to modify local hosts...',
+    print 'Ready to update local hosts...'
 
-    if custom_hosts_backed_up is False:
-        # Locate Local Hosts
-        local_hosts_data = open('hosts', 'r').readlines()
-        total_lines = 0
-        update_hosts_lines = 0
-        count_hosts = True
-        for lines in local_hosts_data:
-            total_lines += 1
-            if count_hosts is True:
-                update_hosts_lines += 1
-            if lines == '#+END\n':
-                print 'Locate mark found.'
-                count_hosts = False
-
-        # Backup Custom Hosts Record
-        print 'Backing-up local custom hosts record...',
-        custom_hosts = backup_local_hosts(local_hosts_data, 'exist_file', update_hosts_lines, total_lines)
-        print 'Success.'
-    else:
-        print 'Skipped.'
+    # Backup Custom Hosts Record
+    custom_hosts = backup_local_hosts(local_hosts_data)
 
     # Update Hosts
     print 'Writing remote hosts record...',
