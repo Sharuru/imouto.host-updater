@@ -30,4 +30,4 @@ For other platforms, I will add auto-flush function later.
 For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.hosts-updater/issues)
 
 ##Latest Version
-v0.1.6 Backup hosts for first running
+v0.1.7 Move counter into backup_local_hosts
