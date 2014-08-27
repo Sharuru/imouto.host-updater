@@ -36,7 +36,7 @@ def linker(url):
 
 
 def backup_local_hosts(data):
-    hosts_data = []
+    hosts_data_local = []
     print 'Detecting local hosts type...',
     for check_line in data:
         if check_line == '#+END\n':
@@ -55,15 +55,15 @@ def backup_local_hosts(data):
             # Backup Process
             print 'Backing-up local custom hosts record...',
             for record in range(update_hosts_lines, total_lines):
-                hosts_data.append(data[record])
+                hosts_data_local.append(data[record])
             print 'Success.'
-            return hosts_data
+            return hosts_data_local
     print 'Not formatted.'
     print 'Backing-up local custom hosts record...',
     for record in data:
-        hosts_data.append(record)
+        hosts_data_local.append(record)
     print 'Success.'
-    return hosts_data
+    return hosts_data_local
 
 
 def get_hosts_dl_link(source):
@@ -75,11 +75,11 @@ def get_hosts_dl_link(source):
 def check_local_hosts():
     print 'Checking local...'
     try:
-        hosts_data = open('hosts', 'r').read()
+        hosts_data_check = open('hosts', 'r').read()
     except IOError:
         print 'No local hosts found.'
-        hosts_data = open('hosts', 'w+').read()
-    return hosts_data
+        hosts_data_check = open('hosts', 'w+').read()
+    return hosts_data_check
 
 
 def check_local_version(hosts_data):
@@ -126,7 +126,8 @@ else:
     print 'Ready to update local hosts...'
 
     # Backup Custom Hosts Record
-    custom_hosts = backup_local_hosts(local_hosts_data)
+    local_hosts_data_line = hosts_data = open('hosts', 'r').readlines()
+    custom_hosts = backup_local_hosts(local_hosts_data_line)
 
     # Update Hosts
     print 'Writing remote hosts record...',
