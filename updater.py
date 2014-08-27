@@ -75,19 +75,22 @@ def get_hosts_dl_link(source):
 def check_local_hosts():
     print 'Checking local...'
     try:
-        hosts_data_check = open('hosts', 'r').read()
+        hosts_data_check = open('hosts', 'r').readlines()
     except IOError:
         print 'No local hosts found.'
-        hosts_data_check = open('hosts', 'w+').read()
+        hosts_data_check = open('hosts', 'w+').readlines()
     return hosts_data_check
 
 
 def check_local_version(hosts_data):
-    version = re.compile('UPDATE_TIME (.*)')
-    try:
-        return version.findall(hosts_data)[0]
-    except IndexError:
-        return 'Not Found.'
+    rule = 'UPDATE_TIME (.*)'
+    version = re.compile(rule)
+    for line_for_check in hosts_data:
+        try:
+            return version.findall(line_for_check)[0]
+        except IndexError:
+            pass
+    return 'Not Found.'
 
 
 def check_remote_version(source):
@@ -126,8 +129,7 @@ else:
     print 'Ready to update local hosts...'
 
     # Backup Custom Hosts Record
-    local_hosts_data_line = hosts_data = open('hosts', 'r').readlines()
-    custom_hosts = backup_local_hosts(local_hosts_data_line)
+    custom_hosts = backup_local_hosts(local_hosts_data)
 
     # Update Hosts
     print 'Writing remote hosts record...',
