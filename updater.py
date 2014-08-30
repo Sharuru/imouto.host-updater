@@ -11,7 +11,7 @@ reload(__import__('sys')).setdefaultencoding('utf-8')
 
 ############### CONFIG HERE ###############
 
-source_id = 9       # imouto.hosts' id is 9
+source_id = 9       # imouto.host's id is 9
 
 ###########################################
 
