@@ -18,6 +18,17 @@ imouto.hosts updater will save all the custom hosts record after mark '#+END' be
 
 **If you are first running this updater, I highly recommend you to backup your hosts at different places though the updater will auto backup and added it after the '#+END' mark.**
 
+##I am a new user and I can not connect to the projecth.us/sources!
+Maybe your ISP block that site, you can try adding the following hosts record in your local hosts and try again:
+```
+#ProjectH START
+106.186.31.197	projecth.us
+106.186.31.197	www.projecth.us
+106.186.31.197	forum.projecth.us
+106.186.31.197	repo.projecth.us
+#ProjectH END
+```
+
 ##I don't like imouto.host, I want to use other sources published on projecth.org/sources!
 Though this updater is simple and almost write for **me** :), you can still choose your own sources on projecth.org/sources. Just change source_id and make a little work in regexp, you can make your own updater!
 
