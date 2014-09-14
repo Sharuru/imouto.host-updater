@@ -41,4 +41,4 @@ For other platforms, I will add auto-flush function later.
 For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.host-updater/issues)
 
 ##Latest Version
-v0.1.9 Upgrade to Python3
+v0.2.0 Upgrade to Python3
