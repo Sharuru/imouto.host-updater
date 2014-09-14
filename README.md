@@ -2,13 +2,13 @@ imouto.host-updater
 ===================
 
 ##Intro
-imouto.host updater is an easy hosts updater for imouto.host published on [projecth.org/sources](https://www.projecth.us/sources) with limited library support based on Python 2.7.8.
+imouto.host updater is an easy hosts updater for imouto.host published on [projecth.org/sources](https://www.projecth.us/sources) with limited library support based on Python 3.4.1.
 
 ##Advantage
 Easy to use and easy to customize.
 
 ##Usage
-+ Clone this repositority to everywhere you like. (for example: under 'etc' folder.)
++ Clone this repository to everywhere you like. (for example: under 'etc' folder.)
 + Backup your own hosts record if needed.
 + Run ```python updater.py```
 + Your hosts is **UP-TO-DATE**!
@@ -41,4 +41,4 @@ For other platforms, I will add auto-flush function later.
 For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.host-updater/issues)
 
 ##Latest Version
-v0.1.8 Clean file object
+v0.1.9 Upgrade to Python3

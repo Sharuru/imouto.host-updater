@@ -2,11 +2,12 @@
 __author__ = 'Mave'
 
 import re
-import urllib2
+import urllib.request
 import platform
 import os
+import operator
 
-reload(__import__('sys')).setdefaultencoding('utf-8')
+#reload(__import__('sys')).setdefaultencoding('utf-8')
 
 
 ############### CONFIG HERE ###############
@@ -18,29 +19,29 @@ source_id = 9       # imouto.host's id is 9
 
 def linker(url):
     linker_try_times = 3
-    request = urllib2.Request(url)
-    request.add_header('User-Agent', 'Macho Macho Man')
+    req = urllib.request.Request(url)
+    req.add_header('User-Agent', 'Macho Macho Man')
     for times in range(linker_try_times):
-        print 'Connecting...',
+        print('Connecting...', end='')
         try:
-            response = urllib2.urlopen(url, timeout=5)
-            print 'Success.'
+            response = urllib.request.urlopen(req, timeout=5)
+            print('Success.')
             return response.read()
         except:
-            print 'Failed, Try Again.'
+            print('Failed, Try Again.')
             pass
         if times == 2:
-            print 'Connection Failed.'
-            print 'Please check your hosts or try again later.'
+            print('Connection Failed.')
+            print('Please check your hosts or try again later.')
             exit()
 
 
 def backup_local_hosts(data):
     hosts_data_local = []
-    print 'Detecting local hosts type...',
+    print('Detecting local hosts type...', end='')
     for check_line in data:
         if check_line == '#+END\n':
-            print 'Formatted.'
+            print('Formatted.')
             # Locate Local Hosts
             total_lines = 0
             update_hosts_lines = 0
@@ -50,19 +51,19 @@ def backup_local_hosts(data):
                 if count_hosts is True:
                     update_hosts_lines += 1
                 if lines == '#+END\n':
-                    print 'Locate mark found.'
+                    print('Locate mark found.')
                     count_hosts = False
             # Backup Process
-            print 'Backing-up local custom hosts record...',
+            print('Backing-up local custom hosts record...', end='')
             for record in range(update_hosts_lines, total_lines):
                 hosts_data_local.append(data[record])
-            print 'Success.'
+            print('Success.')
             return hosts_data_local
-    print 'Not formatted.'
-    print 'Backing-up local custom hosts record...',
+    print('Not formatted.')
+    print('Backing-up local custom hosts record...', end='')
     for record in data:
         hosts_data_local.append(record)
-    print 'Success.'
+    print('Success.')
     return hosts_data_local
 
 
@@ -73,11 +74,11 @@ def get_hosts_dl_link(source):
 
 
 def check_local_hosts():
-    print 'Checking local...'
+    print('Checking local...')
     try:
         hosts_data_check = open('hosts', 'r').readlines()
     except IOError:
-        print 'No local hosts found.'
+        print('No local hosts found.')
         hosts_data_check = open('hosts', 'w+').readlines()
     return hosts_data_check
 
@@ -102,64 +103,56 @@ def check_remote_version(source):
 # Main Start
 urls = 'https://www.projecth.us/sources/'
 content = linker(urls).decode('utf-8')
-print 'Checking remote...'
+print('Checking remote...')
 remote_update_date = check_remote_version(source_id)
-print 'Latest update time is: ' + remote_update_date
+print('Latest update time is: ' + remote_update_date)
 
 # Local Check
 local_hosts_data = check_local_hosts()
 local_update_date = check_local_version(local_hosts_data)
-print 'Local hosts file update time is: ' + local_update_date
+print('Local hosts file update time is: ' + local_update_date)
 
 # Is Hosts Need Update Or Not
-if cmp(local_update_date, remote_update_date) == 0:
-    print 'Hosts is already updated.'
+if operator.eq(local_update_date, remote_update_date) == 0:
+    print('Hosts is already updated.')
 else:
-    print 'Hosts needs update.'
+    print('Hosts needs update.')
 
     # Prepare To Download
     download_url = urls + str(source_id) + '/' + get_hosts_dl_link(source_id) + '/hosts'
-    print 'Downloading latest imouto.hosts from ' + download_url,
+    print('Downloading latest imouto.hosts from ' + download_url, end='')
 
     # Get Remote Data
-    remote_hosts_data = urllib2.urlopen(download_url).read()
+    remote_hosts_data = urllib.request.urlopen(download_url).read()
     open('remote', 'wb').write(remote_hosts_data)
     remote_hosts_data = open('remote', 'r').readlines()
-    print 'Success.'
-    print 'Ready to update local hosts...'
+    print('Success.')
+    print('Ready to update local hosts...')
 
     # Backup Custom Hosts Record
     custom_hosts = backup_local_hosts(local_hosts_data)
 
     # Update Hosts
-    print 'Writing remote hosts record...',
+    print('Writing remote hosts record...', end='')
     open('hosts', 'w').writelines(remote_hosts_data)
-    print 'Success.'
+    print('Success.')
     open('hosts', 'a').write('\n')
-    print 'Writing local custom hosts record...',
+    print('Writing local custom hosts record...', end='')
     open('hosts', 'a').writelines(custom_hosts)
-    print 'Success.'
+    print('Success.')
     open('hosts').close()
 
     # Remove Remote
-    print 'Removing temporary file...',
+    print('Removing temporary file...', end='')
     os.remove('remote')
-    print 'Success.'
+    print('Success.')
 
     # Flush Dns
-    print 'Detecting OS type...'
+    print('Detecting OS type...')
     system_type = platform.system()
     if system_type == 'Windows':
-        print 'For Windows, running ipconfig/flushdns...'
+        print('For Windows, running ipconfig/flushdns...')
         os.system('ipconfig /flushdns')
 
 # All Finished
-print 'All operation finished.'
-
-
-
-
-
-
-
-
+print('All operation finished.')
