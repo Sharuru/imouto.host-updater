@@ -7,8 +7,6 @@ import platform
 import os
 import operator
 
-#reload(__import__('sys')).setdefaultencoding('utf-8')
-
 
 ############### CONFIG HERE ###############
 
