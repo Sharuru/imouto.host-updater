@@ -86,7 +86,8 @@ def check_remote_version(hosts_data):
 
 # Main Start
 urls = 'https://raw.githubusercontent.com/zxdrive/imouto.host/master/imouto.host.txt'
-content = linker(urls).decode('utf-8')
+remote_hosts_data = linker(urls)
+content = remote_hosts_data.decode('utf-8')
 print('Checking remote...')
 remote_update_date = check_remote_version(content)
 print('Latest update time is: ' + remote_update_date)
@@ -103,14 +104,7 @@ if local_update_date == remote_update_date:
 else:
     print('Hosts needs update.')
 
-    # Prepare To Download
-    download_url = 'https://raw.githubusercontent.com/zxdrive/imouto.host/master/imouto.host.txt'
-    print('Downloading latest imouto.hosts from ' + download_url, end='')
-
-    # Get Remote Data
-    remote_hosts_data = urllib.request.urlopen(download_url).read()
-    open('remote', 'wb').write(remote_hosts_data)
-    print(' Success.')
+    # Ready to Update Hosts
     print('Ready to update local hosts...')
 
     # Backup Custom Hosts Record
@@ -125,11 +119,6 @@ else:
     open('hosts', 'a').writelines(custom_hosts)
     print('Success.')
     open('hosts').close()
-
-    # Remove Remote
-    print('Removing temporary file...', end='')
-    os.remove('remote')
-    print('Success.')
 
     # Flush Dns
     print('Detecting OS type...')
