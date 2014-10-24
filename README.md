@@ -34,4 +34,4 @@ For other platforms, I will add auto-flush function later.
 For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.host-updater/issues)
 
 ##Latest Version
-v0.3.1 Fix encoding problem
+v0.3.2 Fix encoding problem after update
