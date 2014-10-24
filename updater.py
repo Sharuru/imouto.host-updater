@@ -116,7 +116,7 @@ else:
     print('Success.')
     open('hosts', 'a').write('\n')
     print('Writing local custom hosts record...', end='')
-    open('hosts', 'a').writelines(custom_hosts)
+    open('hosts', 'a', encoding='utf-8').writelines(custom_hosts)
     print('Success.')
     open('hosts').close()
 
