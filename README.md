@@ -2,7 +2,7 @@ imouto.host-updater
 ===================
 
 ##Intro
-imouto.host updater is an easy hosts updater for imouto.host published on [zxdrive/imouto.host](https://github.com/zxdrive/imouto.host) with limited library support based on Python 3.4.1.
+imouto.host updater is an easy hosts updater for imouto.host published on [zxdrive/imouto.host](https://github.com/zxdrive/imouto.host) with limited library support based on Python 3.4.2.
 
 ##Advantage
 Easy to use and easy to customize.
@@ -34,4 +34,4 @@ For other platforms, I will add auto-flush function later.
 For more information, please check it out in [Issue.](https://github.com/Sharuru/imouto.host-updater/issues)
 
 ##Latest Version
-v0.3.2 Fix encoding problem
+v0.3.4 Improve formatting performance 【This maybe the last version due to imouto.host won't update anymore】
