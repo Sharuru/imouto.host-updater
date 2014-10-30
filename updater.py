@@ -86,10 +86,9 @@ def check_remote_version(hosts_data):
 
 # Main Start
 urls = 'https://raw.githubusercontent.com/zxdrive/imouto.host/master/imouto.host.txt'
-remote_hosts_data = linker(urls)
-content = remote_hosts_data.decode('utf-8')
+remote_hosts_data = linker(urls).decode('utf-8')
 print('Checking remote...')
-remote_update_date = check_remote_version(content)
+remote_update_date = check_remote_version(remote_hosts_data)
 print('Latest update time is: ' + remote_update_date)
 
 # Local Check
@@ -110,9 +109,19 @@ else:
     # Backup Custom Hosts Record
     custom_hosts = backup_local_hosts(local_hosts_data)
 
+    # Formatting Remote Hosts
+    print('Formatting remote hosts, please wait...')
+
+    remote_hosts_data = str(remote_hosts_data)
+    remote_hosts_data_formatted = []
+    for line in remote_hosts_data:
+        if line != '\r':
+            remote_hosts_data_formatted.append(line)
+
     # Update Hosts
     print('Writing remote hosts record...', end='')
-    open('hosts', 'wb').write(remote_hosts_data)
+
+    open('hosts', 'w+', encoding='utf-8').writelines(remote_hosts_data_formatted)
     print('Success.')
     open('hosts', 'a').write('\n')
     print('Writing local custom hosts record...', end='')
